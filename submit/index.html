@@ -77,9 +77,9 @@
 
     </div>
 
-    <div class="custom-file-upload">
-      <input type="file" id="file" name="myfiles[]" multiple />
-  </div>
+    
+      <progress value="0" max='100' id="uploader">0%</progress>
+      <input type="file"  value="upload" id="fileButton" multiple />
 
     <div class="upform-footer">
       <button type="submit" class="btn btn-primary btn-lg">Upload</button>
@@ -95,6 +95,45 @@
   
 
     <script  src="js/index.js"></script>
+    
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyADhEaH5pY3C__unKmLG-vcqCSa0A5HfMw",
+        authDomain: "innobuzz-80180.firebaseapp.com",
+        databaseURL: "https://innobuzz-80180.firebaseio.com",
+        projectId: "innobuzz-80180",
+        storageBucket: "innobuzz-80180.appspot.com",
+        messagingSenderId: "16777088103"
+      };
+      firebase.initializeApp(config);
+      var uploader = document.getElementById('uploader');
+      var filebutton = document.getElementById('fileButton');
+      filebutton.addEventListener('change',function(e){
+        var file = e.target.files[0];
+        var storageRef = firebase.storage().ref('important/' + file.name);
+        var task = storageRef.put(file);
+        task.on('state_changed',
+        function progress(snapshot){
+        var percentage = (snapshot.bytesTransferred/snapshot.totlaBytes) * 100;
+        uploader.value = percentage;
+      },
+
+      function error(err) {
+
+      },
+
+      function complete(){
+
+      },
+    
+        );
+      });
+    </script>
+  
 
 
 
